@@ -4,7 +4,7 @@ const LATENCY = 500;
 
 module.exports = app => {
 
-    app.get('/api/todo', (req, res) => {
+    app.get('/api/tasks', (req, res) => {
         setTimeout(async () => {
             try {
                 const data = await Tasks.findAll();
@@ -16,7 +16,7 @@ module.exports = app => {
         }, LATENCY);
     });
 
-    app.get('/api/todo/:id', async (req, res) => {
+    app.get('/api/tasks/:id', async (req, res) => {
         setTimeout(async () => {
             try {
                 const result = await Tasks.findById(req.params.id);
@@ -28,7 +28,7 @@ module.exports = app => {
         }, LATENCY);
     });
 
-    app.post('/api/todo', async (req, res) => {
+    app.post('/api/tasks', async (req, res) => {
         const id = uuidv4();
         setTimeout(async () => {
             try {
@@ -48,7 +48,7 @@ module.exports = app => {
         }, LATENCY);
     });
 
-    app.patch('/api/todo/:id', async (req, res) => {
+    app.patch('/api/tasks/:id', async (req, res) => {
         setTimeout(async () => {
             try {
                 await Tasks.update(req.body, { where: { id: req.params.id }});
@@ -61,7 +61,7 @@ module.exports = app => {
         });
     });
 
-    app.delete('/api/todo/:id', async (req, res) => {
+    app.delete('/api/tasks/:id', async (req, res) => {
         setTimeout(async () => {
             try {
                 await Tasks.destroy({ where: { id: req.params.id }});

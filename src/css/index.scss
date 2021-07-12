@@ -1,0 +1,46 @@
+@import 'minireset.css/minireset.css';
+
+body,
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: "Arial", "Helvetica", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", BlinkMacSystemFont, -apple-system, sans-serif;
+}
+
+html {
+    background-color: white;
+    font-size: 16px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    min-width: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-rendering: optimizeLegibility;
+    text-size-adjust: 100%;
+}
+
+ul {
+    margin: 9px 10px;
+    padding: 31px 0 16px 0;
+    display: block;
+    border-top: 1pt solid #000;
+    border-bottom: 1pt solid #000;
+
+    li {
+        display: flex;
+        font-size: 1.1875em;
+        margin: 0 0 8px 0;
+
+        input[type="checkbox"] {
+            margin: 15px 25px 15px 10px;
+            transform: scale(2);
+            padding: 10px;
+
+            &:checked + span {
+                text-decoration: line-through;
+            }
+        }
+    }
+}
