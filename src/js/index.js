@@ -1,9 +1,12 @@
 import '../css/index.scss';
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.innerHTML = "";
+    document.body.innerHTML = "<p aria-busy='true'>Loading tasks - please wait...</p>";
 
     contentFetcher.getContent("http://localhost:4000/api/tasks")
+        .then(() => {
+            contentFetcher.enableDone();
+        })
         .then(() => {
             newTask.getForm("http://localhost:4000/api/tasks");
         });
@@ -11,29 +14,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let contentFetcher = {
     getContent: async (url) => {
-        let errorMessage = "There was an error retrieving the tasks - please try reloading the page. If the error persists, please try again later or contact the site owner if possible.",
-            loadingMessage = "Loading tasks - please wait...";
-
-        document.body.innerHTML = "<p aria-busy='true'>" + loadingMessage + "</p>";
-
         await fetch(url, {
             method: "get"
         })
 
             .then((response) => {
-                if (!response.ok) {
-                    contentFetcher.error(errorMessage);
-                    throw Error(response.statusText);
-                }
-
-                return response.text();
+                if (response.ok) {
+                    return response.text();
+                }                
             })
 
             .then((data) => {
                 document.body.innerHTML = "";
 
-                let taskList = document.createElement("ul");
-                taskList.id = "tasks"
+                let todoList = document.createElement("ul"),
+                    doneList = document.createElement("ul");
+                todoList.id = "todoList";
+                doneList.id = "doneList";
 
                 JSON.parse(data)
                     .sort((a, b) => {
@@ -43,15 +40,72 @@ let contentFetcher = {
                     })
                     .map((task) => {
                         let listItem = document.createElement("li");
-                        listItem.innerHTML = "<label><input type='checkbox'" + (task.isDone === "1" ? "checked='checked'" : "") + " /><span>" + task.title + "</span></label>";
-                        taskList.appendChild(listItem);
+                        listItem.innerHTML = "<form method='post' action='" + url + "/" + task.id + "'><label><input type='checkbox'" + (task.isDone === "1" ? "checked='checked'" : "") + " name='isDone' /><span>" + task.title + " " + task.importance + "</span></label></form>";
+                        if (task.isDone === "1") {
+                            doneList.appendChild(listItem);
+                        } else {
+                            todoList.appendChild(listItem);
+                        }                        
                     });
 
-                document.body.appendChild(taskList);
+                document.body.appendChild(todoList);
+                document.body.appendChild(doneList);
+            })
+
+            .catch((error) => {
+                contentFetcher.error(error);
             });
     },
 
+    enableDone: () => {
+        let taskLists = document.querySelectorAll("#todoList form,#doneList form");
+
+        [].forEach.call(taskLists, (form) => {
+            let field = form.querySelector("input[type='checkbox']");
+
+            field.addEventListener("change", (e) => {
+                field.setAttribute("disabled", "disabled");
+
+                fetch(form.action, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "isDone": field.checked ? 1 : 0 }),
+                })
+
+                .then((response) => {
+                    if (response.ok) {
+                        field.removeAttribute("disabled");
+                        contentFetcher.getContent("http://localhost:4000/api/tasks")
+                            .then(() => {
+                                contentFetcher.enableDone();
+                            })
+                            .then(() => {
+                                newTask.getForm("http://localhost:4000/api/tasks");
+                            });
+                    }
+                    return Promise.reject(response);
+                })
+
+                .catch((error) => {
+                    field.removeAttribute("disabled");
+                    contentFetcher.getContent("http://localhost:4000/api/tasks")
+                        .then(() => {
+                            contentFetcher.enableDone();
+                        })
+                        .then(() => {
+                            newTask.getForm("http://localhost:4000/api/tasks")
+                        });
+                    console.warn(error);
+                });
+            });
+        });
+    },
+
     error: (message) => {
+        let errorMessage = "There was an error retrieving the tasks - please try reloading the page.If the error persists, please try again later or contact the site owner if possible.";
         document.body.innerHTML = "<p>" + errorMessage + "</p>";
         console.warn(message);
     }
@@ -60,12 +114,12 @@ let contentFetcher = {
 let newTask = {
     getForm: (action) => {
         let newTask = document.createElement("li");
-        newTask.innerHTML = "<form method='post' action='" + action + "' id='newTask'>+<input type='text' name='title' placeholder='Title' id='title' required='required' title='New task title' value='' /><input type='number' name='importance' placeholder='Importance' id='importance' required='required' step='1' min='0' max='2' value='' /><input type='submit' value='Create' title='New task importance' /></form>";
+        newTask.innerHTML = "<form method='post' action='" + action + "' id='newTask'>+<input type='text' name='title' placeholder='Title' id='title' required='required' aria-required='true' title='New task title' value=''  /><input type='number' name='importance' placeholder='Importance' id='importance' required='required' aria-required='true' step='1' min='0' max='2' value='' /><input type='submit' value='Create' title='New task importance' /></form>";
 
-        let taskList = document.getElementById("tasks");
+        let taskList = document.getElementById("todoList");
         taskList.append(newTask);
 
-        document.addEventListener("submit", (e) => {
+        newTask.querySelector("form").addEventListener("submit", (e) => {
             if (e.target.id === "newTask") {
 
                 let form = e.target,

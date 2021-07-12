@@ -25,8 +25,14 @@ ul {
     margin: 9px 10px;
     padding: 31px 0 16px 0;
     display: block;
-    border-top: 1pt solid #000;
-    border-bottom: 1pt solid #000;
+
+    &:first-child {
+        border-top: 1pt solid #000;
+    }
+
+    &:last-child {
+        border-bottom: 1pt solid #000;
+    }
 
     li {
         font-size: 1.1875em;
@@ -34,6 +40,9 @@ ul {
 
         label {
             display: flex;
+        }
+
+        form {
         }
 
         input[type="checkbox"] {
