@@ -29,18 +29,54 @@ ul {
     border-bottom: 1pt solid #000;
 
     li {
-        display: flex;
         font-size: 1.1875em;
         margin: 0 0 8px 0;
+
+        label {
+            display: flex;
+        }
 
         input[type="checkbox"] {
             margin: 15px 25px 15px 10px;
             transform: scale(2);
             padding: 10px;
 
+            & + span {
+                margin: 10px 0 0;
+            }
+
             &:checked + span {
                 text-decoration: line-through;
             }
         }
+
+        form {
+            padding-left: 10px;
+
+            input {
+                font-size: 1.1875em;
+                margin-left: 25px;
+                margin-bottom: 5px;
+
+                & + input {
+                    margin-left: 36px;
+                }
+
+                @media screen and (min-width: 700px) {
+                    &#importance {
+                        width: 150px;
+                    }
+                }
+
+                @media screen and (max-width: 700px) {
+                    width: calc(100% - 40px);
+                }
+            }
+        }
     }
+}
+
+p {
+    font-size: 1.1875em;
+    padding: 10px;
 }
