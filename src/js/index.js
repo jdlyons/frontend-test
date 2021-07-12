@@ -11,7 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let contentFetcher = {
     getContent: async (url) => {
-        let errorMessage = "There was an error retrieving the request - please try again.";
+        let errorMessage = "There was an error retrieving the tasks - please try reloading the page. If the error persists, please try again later or contact the site owner if possible.",
+            loadingMessage = "Loading tasks - please wait...";
+
+        document.body.innerHTML = "<p aria-busy='true'>" + loadingMessage + "</p>";
 
         await fetch(url, {
             method: "get"
@@ -27,6 +30,8 @@ let contentFetcher = {
             })
 
             .then((data) => {
+                document.body.innerHTML = "";
+
                 let taskList = document.createElement("ul");
                 taskList.id = "tasks"
 
@@ -47,7 +52,7 @@ let contentFetcher = {
     },
 
     error: (message) => {
-        document.body.innerHTML = "<p>There was an error retrieving the tasks - please try reloading the page.</p><p>If the error persists, please try again later or contact the site owner if possible.</p>";
+        document.body.innerHTML = "<p>" + errorMessage + "</p>";
         console.warn(message);
     }
 };
@@ -94,7 +99,7 @@ let newTask = {
 
                 .catch((error) => {
                     [].forEach.call(fields, (field) => {
-                        field.removeAttribute("disabled", "disabled");
+                        field.removeAttribute("disabled");
                     });
                     window.location.reload();
                     console.warn(error);
