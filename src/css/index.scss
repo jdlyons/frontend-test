@@ -21,6 +21,10 @@ html {
     text-size-adjust: 100%;
 }
 
+.hidden {
+    display: none;
+}
+
 ul {
     margin: 9px 10px;
     padding: 31px 0 16px 0;
@@ -35,50 +39,105 @@ ul {
     }
 
     li {
+        display: flex;
+        width: 50%;
         font-size: 1.1875em;
         margin: 0 0 8px 0;
 
-        label {
+        @media screen and (max-width: 1600px) {
+            width: 100%;
+        }
+
+        @media screen and (max-width: 700px) {
+            display: block;
+        }
+
+        form {
+            flex: 1 1 auto;
             display: flex;
-        }
+            align-content: center;
 
-        form {
-        }
-
-        input[type="checkbox"] {
-            margin: 15px 25px 15px 10px;
-            transform: scale(2);
-            padding: 10px;
-
-            & + span {
-                margin: 10px 0 0;
+            @media screen and (min-width: 700px) {
+                padding-left: 10px;
             }
 
-            &:checked + span {
-                text-decoration: line-through;
+            & + form {
+                flex: 0 1 auto;
             }
-        }
 
-        form {
-            padding-left: 10px;
+            & > span {
+                display: inline-block;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                flex: 1 1 auto;
+            }
 
-            input {
-                font-size: 1.1875em;
-                margin-left: 25px;
-                margin-bottom: 5px;
+            @media screen and (max-width: 700px) {
+                display: block;
+            }
 
-                & + input {
-                    margin-left: 36px;
+            label {
+                display: flex;
+                flex: 1 1 auto;
+
+                &:first-child {
+                    margin-left: -10px;
                 }
 
                 @media screen and (min-width: 700px) {
-                    &#importance {
+                    & + input,
+                    & + input + input {
+                        margin-left: 25px;
+                    }
+                }
+            }
+
+            input {
+                font-size: 1.1875em;
+
+                &[type="checkbox"] {
+                    margin: 15px 25px 15px 0px;
+                    transform: scale(2);
+                    padding: 10px;
+
+                    &:checked ~ span {
+                        text-decoration: line-through;
+                    }
+
+                    & + span + label + input {
+                        margin-left: 0;
+                    }
+                }
+
+                @media screen and (min-width: 700px) {
+                    &#newimportance {
                         width: 150px;
                     }
                 }
 
                 @media screen and (max-width: 700px) {
-                    width: calc(100% - 40px);
+                    &:not([type='checkbox']) {
+                        width: 100%;
+                        margin-bottom: 5px;
+                    }
+
+                    &[type='checkbox'] {
+                        margin-left: 7px;
+                    }
+                }
+
+                @media screen and (min-width: 700px) {
+                    &.delete {
+                        border: 0;
+                        text-indent: -1000px;
+                        width: 37px;
+                        height: 37px;
+                        background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48bGluZSB4MT0iMTAiIHkxPSIxMCIgeDI9IjIyIiB5Mj0iMjIiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDAiLz48bGluZSB4MT0iMTAiIHkxPSIyMiIgeDI9IjIyIiB5Mj0iMTAiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDAiLz48L3N2Zz4=") 50% 50% no-repeat #FFF;
+
+                        &:hover {
+                            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48bGluZSB4MT0iMTAiIHkxPSIxMCIgeDI9IjIyIiB5Mj0iMjIiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiNGRkYiLz48bGluZSB4MT0iMTAiIHkxPSIyMiIgeDI9IjIyIiB5Mj0iMTAiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiNGRkYiLz48L3N2Zz4=") 50% 50% no-repeat #000;
+                        }
+                    }
                 }
             }
         }
