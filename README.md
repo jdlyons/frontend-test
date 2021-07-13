@@ -43,4 +43,4 @@ This repo includes webpack (https://webpack.js.org/concepts) and includes suppor
 | 6 | ~~There is an artificial 500ms latency on all GET and POST API requests. Improve the user experience by adding a loading state to the UI~~ |
 | 7 | ~~Implement a mechanism to mark a Task as done on the UI and PATCH /api/task/<task.id> so a change to the isDone property of a task persists on page reload. The complete task should go into a separate list as suggested in the [wireframe sketch](wireframe/wireframe.svg)~~ |
 | 8 | ~~Add a control to allow a user to delete a Task, making a DELETE request to /api/task/<task.id> and updating the UI~~ |
-| 9 | Implement a mechanism to edit a task that allows a user to change the label and importance by PATCHing /api/task/<task.id> |
+| 9 | ~~Implement a mechanism to edit a task that allows a user to change the label and importance by PATCHing /api/task/<task.id>~~ |
